@@ -1,26 +1,17 @@
-import express from "express";
-import bodyParser from "body-parser";
-
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
 app.post("/webhook", (req, res) => {
-  const msg = req.body.Body;
-  const from = req.body.From;
+  const msg = req.body.Body?.toLowerCase() || "";
 
-  console.log("Mensagem recebida:", msg, "de", from);
+  let reply = "Não entendi 😅";
 
-  // resposta simples
-  res.set("Content-Type", "text/xml");
+  if (msg === "oi") reply = "Fala! 😎";
+  if (msg === "help") reply = "Comandos: oi, help, status";
+  if (msg === "status") reply = "Bot online 🚀";
+  if (msg === "victor") reply = "Mamador 🍆🍆🍆";
+
+  res.type("text/xml");
   res.send(`
     <Response>
-      <Message>Recebi: ${msg}</Message>
+      <Message>${reply}</Message>
     </Response>
   `);
-});
-
-const port = process.env.PORT || 10000;
-app.listen(port, () => {
-  console.log("Bot rodando na porta", port);
 });
