@@ -1,30 +1,26 @@
 import express from "express";
+import bodyParser from "body-parser";
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-const VERIFY_TOKEN = "aorito123";
-
-// 🔐 Verificação do Webhook (GET)
-app.get("/webhook", (req, res) => {
-  const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
-
- if (mode === "subscribe" && token === VERIFY_TOKEN) {
-  return res.status(200).send(challenge);
-}
-return res.sendStatus(403);
-
-});
-
-// 📩 Receber eventos (POST)
 app.post("/webhook", (req, res) => {
-  console.log("EVENT RECEIVED:", JSON.stringify(req.body, null, 2));
-  res.sendStatus(200);
+  const msg = req.body.Body;
+  const from = req.body.From;
+
+  console.log("Mensagem recebida:", msg, "de", from);
+
+  // resposta simples
+  res.set("Content-Type", "text/xml");
+  res.send(`
+    <Response>
+      <Message>Recebi: ${msg}</Message>
+    </Response>
+  `);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 app.listen(port, () => {
-  console.log("Bot running on port", port);
+  console.log("Bot rodando na porta", port);
 });
