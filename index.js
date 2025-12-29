@@ -3,7 +3,7 @@ import express from "express";
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = "aorito123"; // TEM que ser igual ao da Meta
+const VERIFY_TOKEN = "aorito123";
 
 // 🔐 Verificação do Webhook (GET)
 app.get("/webhook", (req, res) => {
@@ -11,12 +11,11 @@ app.get("/webhook", (req, res) => {
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
-    console.log("WEBHOOK VERIFIED");
-    return res.status(200).send(challenge);
-  }
+ if (mode === "subscribe" && token === VERIFY_TOKEN) {
+  return res.status(200).send(challenge);
+}
+return res.sendStatus(403);
 
-  return res.sendStatus(403);
 });
 
 // 📩 Receber eventos (POST)
