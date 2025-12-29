@@ -3,7 +3,7 @@ import express from "express";
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "aorus-bot";
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "aorito123";
 
 // health check
 app.get("/", (req, res) => {
